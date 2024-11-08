@@ -75,8 +75,9 @@ export async function POST(req:Request){
         }
 
         return NextResponse.json({
-            success:false,
+            success:true,
             message:"user registered succefully Please verify your email",
+            email:emailResponse,
         },{status:200});
 
     } catch (error) {
