@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { useDebounceValue } from 'usehooks-ts'
+import { useDebounceCallback, useDebounceValue } from 'usehooks-ts'
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { signUpSchemaValidation } from "@/schemas/signUpSchema"
@@ -17,7 +17,7 @@ import { Loader2 } from "lucide-react"
 //for this page we are using shadcn fomr component
 
 
-const page = () => {
+const SignupForm = () => {
   const [username,setUsername] = useState('');
   //for username is availble or not
   const [usernameMessage, setUsernameMessage] = useState('');
@@ -26,7 +26,7 @@ const page = () => {
   const [isChekingUsername, setIsChekingUsername] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);//form
   //debouncing library usehooks-ts
-  const debouncedUsername = useDebounceValue(username , 300);
+  const debounced = useDebounceCallback(setUsername , 300);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -44,15 +44,21 @@ const page = () => {
   //for the cheking uesrname is unique
   useEffect(() => {
     const checkUsernameUnique = async () => {
-      if(debouncedUsername){
+      if(username){
         setIsChekingUsername(true);
         setUsernameMessage('');
         try {
-          const response = await axios.get(`/api/check-username-unique?username=${debouncedUsername}`);
-          setUsernameMessage(response.data.message);
+          const response = await axios.get(`/api/check-username-unique?username=${username}`);
+          let message = response.data.message;
+          console.log(message);
+          setUsernameMessage(message);
         } catch (error) {
           const axiosError = error as AxiosError<ApiResponse>;
-          setUsernameMessage(axiosError.response?.data.message ?? "Error checking username");
+          console.log(axiosError)
+          setUsernameMessage(
+            axiosError.
+            response?.data.message ?? 'Error checking username'
+          );
         }finally{
           setIsChekingUsername(false);
         }
@@ -60,7 +66,7 @@ const page = () => {
     }
     checkUsernameUnique();
 
-  } ,[debouncedUsername]);
+  } ,[username]);
 
   const onSubmit = async (data: z.infer<typeof signUpSchemaValidation>) => {
     setIsSubmitting(true);
@@ -108,10 +114,12 @@ const page = () => {
                     <Input placeholder="username" {...field} 
                     onChange={(e) => {
                       field.onChange(e);//main 
-                      setUsername(e.target.value);
+                      debounced(e.target.value);
                     }}
                     />
                   </FormControl>
+                  {isChekingUsername && <Loader2 className="animate-spin" />}
+                  <p className={`text-sm ${usernameMessage === "Username is availble" ? 'text-green-500' : 'text-red-500'}`}>{usernameMessage}</p>
                   <FormMessage />
                 </FormItem>
               )}  
@@ -148,7 +156,7 @@ const page = () => {
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please Wait
                   </>
-                ): ('Sign Up');
+                ): ('Sign Up')
               }
             </Button>
           </form>
@@ -166,4 +174,4 @@ const page = () => {
   )
 }
 
-export default page
+export default SignupForm;
