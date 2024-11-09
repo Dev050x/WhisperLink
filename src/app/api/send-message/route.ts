@@ -13,7 +13,7 @@ export async function POST(req:Request){
         }
         const newMessage = {content , createdAt:new Date()} as Message;
         user.message.push(newMessage);
-
+        user.save();
         return NextResponse.json({
             success:true,
             message:"message sent succesfully",
