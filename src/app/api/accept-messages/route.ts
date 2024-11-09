@@ -54,6 +54,8 @@ export async function POST(req:Request){
 
 }
 
+
+//status of accepting message
 export async function GET(req:Request) {
     await dbConnect();
     
