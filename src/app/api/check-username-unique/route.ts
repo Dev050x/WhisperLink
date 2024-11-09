@@ -26,7 +26,7 @@ export async function GET(req:Request){
             const usernameErrors = result.error.format().username?._errors || []
             return NextResponse.json({
                 success:false,
-                messsage:usernameErrors?.length > 0 ? usernameErrors.join(', '):"Invalid query parameteres",
+                message:usernameErrors?.length > 0 ? usernameErrors.join(', '):"Invalid query parameteres",
             }, {status:400});
         }
 
@@ -35,13 +35,13 @@ export async function GET(req:Request){
         if(existingVerifiedUser){
             return NextResponse.json({
                 success:false,
-                messsage:"username already exists",
+                message:"username already exists",
             }, {status:400});
         }   
         return NextResponse.json({
             success:true,
-            messsage:"Username is availble",
-        }, {status:400});
+            message:"Username is availble",
+        }, {status:200});
 
 
     } catch (error) {
