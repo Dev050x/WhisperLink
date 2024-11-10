@@ -3,12 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import Link from "next/link"
-import { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Loader2 } from "lucide-react"
 import { signInSchemaValidation } from "@/schemas/signInSchema"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
@@ -31,11 +29,13 @@ const SignupForm = () => {;
 
   const onSubmit = async (data: z.infer<typeof signInSchemaValidation>) => {
     console.log("submitting signin")
+    console.log(data);
     const result = await signIn('credentials',{
       redirect:false,
       identifier: data.identifier,
       password: data.password
     })
+    console.log(result);
     if(result?.error){
       toast({
         title:"Login failed",
@@ -67,7 +67,7 @@ const SignupForm = () => {;
               name="identifier"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>email</FormLabel>
+                  <FormLabel>Email/Username</FormLabel>
                   <FormControl>
                     <Input placeholder="email" {...field} />
                   </FormControl>
