@@ -26,6 +26,7 @@ import { Message } from "@/model/User"
 import { useToast } from "@/hooks/use-toast"
 import axios from "axios"
 import { ApiResponse } from "@/types/ApiResponse"
+import dayjs from 'dayjs';
   
 type MessageCardProps = {
     message: Message;
@@ -35,19 +36,21 @@ const MessageCard = ({message , onMessageDelete}:MessageCardProps) => {
   const {toast} = useToast()
   const handleDeleteConfirm = async () => {
     const response = await axios.delete<ApiResponse>(`/api/delete-message/${message._id}`);
+    console.log(response.data.message);
     toast({
         title:response.data.message,
     })
     onMessageDelete(message._id);
   }
   return (
-    <Card>
+    <Card className="card-bordered">
         <CardHeader>
-            <CardTitle>Card Title</CardTitle>
+            <div className="flex justify-between items-center">
+            <CardTitle>{message.content}</CardTitle>
             <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <Button variant="destructive">
-                        <X  className="w-5 h-5" />
+                        <X  className="w-5 h-5"  />
                     </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -64,8 +67,10 @@ const MessageCard = ({message , onMessageDelete}:MessageCardProps) => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
-            <CardDescription>Card Description</CardDescription>
+            </div>
+            <div className="text-sm">
+                {dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}
+            </div>
         </CardHeader>
         <CardContent>
         </CardContent>
