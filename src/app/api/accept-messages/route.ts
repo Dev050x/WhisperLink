@@ -13,7 +13,7 @@ export async function POST(req:Request){
     const session = await getServerSession(authOptions);
     const user: User = session?.user as User;
 
-    if(!session || session.user){
+    if(!session || !session.user){
         return NextResponse.json({
             success:false,
             message:"not authenticated",
@@ -63,7 +63,7 @@ export async function GET(req:Request) {
     const session = await getServerSession(authOptions);
     const user: User = session?.user as User;
 
-    if(!session || session.user){
+    if(!session || !session.user){
         return NextResponse.json({
             success:false,
             message:"not authenticated",
