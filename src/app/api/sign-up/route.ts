@@ -73,7 +73,7 @@ export async function POST(req:Request){
                 status:500
             })
         }
-
+        
         return NextResponse.json({
             success:true,
             message:"user registered succefully Please verify your email",
