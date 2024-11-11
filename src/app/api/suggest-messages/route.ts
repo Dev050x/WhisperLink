@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server';
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
-const openaiClient = openai('gpt-3.5-turbo');
 
 export async function POST(req: Request) {
 
@@ -13,7 +12,8 @@ export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
   
-    const prompt = "Create a list of three open-ended and engaging questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous social messaging platform, like Qooh.me, and should be suitable for a diverse audience. Avoid personal or sensitive topics, focusing instead on universal themes that encourage friendly interaction. For example, your output should be structured like this: 'What’s a hobby you’ve recently started?||If you could have dinner with any historical figure, who would it be?||What’s a simple thing that makes you happy?'. Ensure the questions are intriguing, foster curiosity, and contribute to a positive and welcoming conversational environment.";
+    const prompt = "Generate three thought-provoking and inclusive questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous social messaging platform, like Qooh.me, and should be approachable for a broad audience. Focus on open-ended inquiries that spark curiosity, avoid sensitive or controversial topics, and promote friendly and meaningful conversations. For instance, your output could look like: 'If you could instantly master any skill, what would it be?||What book or movie had the biggest impact on you?||What’s the most unexpected lesson you’ve learned in life?'. Aim for questions that are engaging and create a positive space for dialogue.";
+
     // const prompt = "hey write some story";
 
     const result = await streamText({
@@ -22,12 +22,13 @@ export async function POST(req: Request) {
       messages,
       prompt,
     });
-
-    return result.toTextStreamResponse();
+    
+    return result.toTextStreamResponse()
   } catch (error) {
+    console.log("this is erorr message:",JSON.stringify(error.message));
     return NextResponse.json({
         message:"there is some error",
         error:error,
-    })
+    },{status:400});
   }
 }
