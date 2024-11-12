@@ -25,7 +25,7 @@ WhisperLink is a web application that allows users to sign up, log in, and gener
 
 ## How to Run
 
-1. Clone the repository
+1. Clone the repository: `https://github.com/Divpatel4081/WhisperLink.git`
 2. Install dependencies: `npm install`
 3. Set up environment variables in the `.env` file
 4. Run the development server: `npm run dev`
