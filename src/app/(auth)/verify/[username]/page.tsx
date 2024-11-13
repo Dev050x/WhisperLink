@@ -3,7 +3,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useParams, useRouter } from 'next/navigation';
 import * as z from "zod"
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {  useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { veifySchemaValidation } from '@/schemas/verifySchema';
@@ -16,6 +16,8 @@ import { Button } from '@/components/ui/button';
 
 
 const VerifyAccount = () => {
+  //using this state varibal for otp bcz i don't have resend paid version  
+  const [verifyCode, setVerifyCode] = useState('');
   const router = useRouter();
   const param  = useParams<{username:string}>();
   const {toast} = useToast();
@@ -45,6 +47,25 @@ const VerifyAccount = () => {
         })
     }
   }
+
+  //useEffect hook basically fetch the code from the db
+  useEffect(() => {
+    async function fetchCode(){
+        try {
+            const response = await axios.post('/api/get-verify-code' , {username:param.username});
+            console.log(response.data.code);
+            toast({
+                title:"Verification Code",
+                description: response.data.code,
+                variant:"destructive",
+            })
+        } catch (error) {
+            console.log("error in fetching the verifycode");
+        }
+        const response = await axios.post('/api/get-verify-code' , {username:param.username});
+    }
+    fetchCode();
+  } , []);
   return (
     <div className='flex justify-center items-center min-h-screen bg-gray-100'>
         <div className='w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md'>
