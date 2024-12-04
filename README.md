@@ -1,6 +1,12 @@
+
 # WhisperLink
 
 WhisperLink is a web application that allows users to sign up, log in, and generate anonymous message links. These links can be shared with friends, who can send anonymous messages without authentication. The app integrates OpenAI for message suggestions and Resend for email verification during sign-up.
+
+## LINK
+
+https://youtu.be/O5Jol4iwRFA
+
 
 ## Features
 
